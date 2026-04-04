@@ -1,21 +1,17 @@
-import { Route, Routes } from "react-router-dom";
-import Layout from "./components/Layout";
-import HomePage from "./pages/HomePage";
-import MachinesPage from "./pages/MachinesPage";
-import NotFoundPage from "./pages/NotfoundPage";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/layout/Layout";
+import DashboardPage from "./pages/DashboardPage";
 import TicketsPage from "./pages/TicketsPage";
-import "./index.css";
+import MachinesPage from "./pages/MachinesPage";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<HomePage />} />
+        <Route index element={<DashboardPage />} />
         <Route path="tickets" element={<TicketsPage />} />
         <Route path="machines" element={<MachinesPage />} />
       </Route>
-
-      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
