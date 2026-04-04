@@ -8,6 +8,7 @@ import HoverButton from "../ui/HoverButton";
 type NewsItem = {
   time: string;
   title: string;
+  description: string;
   tag: string;
   accent: string;
 };
@@ -16,6 +17,7 @@ function NewsFeedCard() {
   const items: NewsItem[] = newsItems.map((item) => ({
     time: String(item.time),
     title: String(item.title),
+    description: String(item.description ?? ""),
     tag: String(item.tag),
     accent: String(item.accent),
   }));
@@ -38,6 +40,7 @@ function NewsFeedCard() {
           >
             <div style={newsMetaStyle}>{item.time}</div>
             <h4 style={newsTitleStyle}>{item.title}</h4>
+            <p style={newsTextStyle}>{item.description}</p>
 
             <div
               style={{
@@ -53,6 +56,8 @@ function NewsFeedCard() {
     </Card>
   );
 }
+
+// ============ STYLES ============
 
 const cardStyle: CSSProperties = {
   minHeight: "280px",
@@ -98,7 +103,7 @@ const newsBlockStyle: CSSProperties = {
   borderRadius: "18px",
   padding: "16px",
   overflow: "hidden",
-  minHeight: "96px",
+  minHeight: "120px",
   backgroundColor: "#fcfcfd",
 };
 
@@ -109,13 +114,21 @@ const newsMetaStyle: CSSProperties = {
 };
 
 const newsTitleStyle: CSSProperties = {
-  margin: 0,
-  fontSize: "18px",
-  lineHeight: 1.4,
+  margin: "0 0 10px 0",
+  fontSize: "20px",
+  lineHeight: 1.35,
   fontWeight: 600,
   color: colors.slate700,
   letterSpacing: "-0.01em",
   maxWidth: "78%",
+};
+
+const newsTextStyle: CSSProperties = {
+  margin: 0,
+  fontSize: "14px",
+  lineHeight: 1.5,
+  color: colors.slate400,
+  maxWidth: "76%",
 };
 
 const cornerAccentStyle: CSSProperties = {

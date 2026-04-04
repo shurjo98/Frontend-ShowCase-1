@@ -211,6 +211,8 @@ function MainChartCard() {
   );
 }
 
+// ============ STYLES ============
+
 const cardStyle: CSSProperties = {
   minHeight: "420px",
   padding: "22px",

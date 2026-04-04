@@ -18,6 +18,7 @@ export type SideListItem = {
 export type NewsItem = {
   time: string;
   title: string;
+  description: string;
   tag: string;
   accent: string;
 };
@@ -104,12 +105,16 @@ export const newsItems: NewsItem[] = [
   {
     time: "Today",
     title: "AI predicts 18% failure risk in Line A within next 6 hours",
+    description:
+      "Machine learning model detected anomalies in vibration patterns and temperature readings.",
     tag: "AI",
     accent: "linear-gradient(135deg, #6366f1, #4f46e5)",
   },
   {
     time: "Yesterday",
     title: "Thread break incidents reduced by 23% after optimization",
+    description:
+      "Recent changes to tension settings and monitoring have significantly improved production quality.",
     tag: "Insight",
     accent: "linear-gradient(135deg, #06b6d4, #2563eb)",
   },

@@ -16,12 +16,17 @@ type QueueItem = {
 
 function SideInfoCard() {
   const items: QueueItem[] = useMemo(() => {
-    const statuses: QueueStatus[] = ["open", "in_progress", "waiting", "resolved"];
+    const statuses: QueueStatus[] = [
+      "open",
+      "in_progress",
+      "waiting",
+      "resolved",
+    ];
 
     return sideListItems.map((item, index) => ({
       name: item.name,
       value: Number(item.value),
-      trend: item.trend === "up" ? "up" : "down",
+      trend: item.trend === "up" ? ("up" as const) : ("down" as const),
       status: statuses[index % statuses.length],
     }));
   }, []);
@@ -60,10 +65,14 @@ function SideInfoCard() {
             const isSelected = index === selectedIndex;
 
             return (
-              <div
+              <button
                 key={item.name}
+                type="button"
                 onClick={() => setSelectedIndex(index)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  ...buttonWrapperStyle,
+                  ...(isSelected ? selectedButtonStyle : {}),
+                }}
               >
                 <HoverRow
                   style={{
@@ -80,13 +89,17 @@ function SideInfoCard() {
                     />
                     <div style={textBlockStyle}>
                       <span style={nameStyle}>{item.name}</span>
-                      <span style={metaStyle}>{formatStatus(item.status)}</span>
+                      <span style={metaStyle}>
+                        {formatStatus(item.status)}
+                      </span>
                     </div>
                   </div>
 
-                  <span style={scoreStyle}>{getPriorityLabel(item.value)}</span>
+                  <span style={scoreStyle}>
+                    {getPriorityLabel(item.value)}
+                  </span>
                 </HoverRow>
-              </div>
+              </button>
             );
           })}
         </div>
@@ -113,6 +126,8 @@ function getPriorityColor(value: number) {
   if (value >= 45) return "#f59e0b";
   return "#22c55e";
 }
+
+// ============ STYLES ============
 
 const cardStyle: CSSProperties = {
   minHeight: "420px",
@@ -155,6 +170,12 @@ const listPanelStyle: CSSProperties = {
   flexDirection: "column",
 };
 
+const buttonWrapperStyle: CSSProperties = {
+  all: "unset",
+  display: "contents",
+  cursor: "pointer",
+};
+
 const rowStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
@@ -168,6 +189,11 @@ const rowStyle: CSSProperties = {
 const selectedRowStyle: CSSProperties = {
   backgroundColor: "#f8fafc",
   boxShadow: "inset 3px 0 0 #2563eb",
+};
+
+const selectedButtonStyle: CSSProperties = {
+  all: "unset",
+  display: "contents",
 };
 
 const leftStyle: CSSProperties = {

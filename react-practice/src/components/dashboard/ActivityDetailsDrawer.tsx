@@ -1,14 +1,6 @@
 import { useEffect } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import {
-  X,
-  Cpu,
-  Ticket,
-  Wrench,
-  Clock3,
-  User,
-  CircleAlert,
-} from "lucide-react";
+import { X, Cpu, Ticket, Wrench, Clock3, User, CircleAlert } from "lucide-react";
 import { colors } from "../../theme/colors";
 import HoverButton from "../ui/HoverButton";
 
@@ -98,7 +90,9 @@ function ActivityDetailsDrawer({
           <div style={contentStyle}>
             <div style={heroCardStyle}>
               <div style={heroTopStyle}>
-                <div style={heroIconStyle}>{getActivityIcon(item.category)}</div>
+                <div style={heroIconStyle}>
+                  {getActivityIcon(item.category)}
+                </div>
 
                 <span
                   style={{
@@ -140,9 +134,15 @@ function ActivityDetailsDrawer({
               <div style={sectionTitleStyle}>Recommended Actions</div>
 
               <div style={actionListStyle}>
-                <div style={actionItemStyle}>Review the machine history</div>
-                <div style={actionItemStyle}>Check technician availability</div>
-                <div style={actionItemStyle}>Create or link a support ticket</div>
+                <div style={actionItemStyle}>
+                  Review the machine history
+                </div>
+                <div style={actionItemStyle}>
+                  Check technician availability
+                </div>
+                <div style={actionItemStyle}>
+                  Create or link a support ticket
+                </div>
               </div>
             </div>
 
@@ -210,6 +210,8 @@ function getStatusTheme(statusType: StatusType): CSSProperties {
     backgroundColor: colors.surfaceSoft,
   };
 }
+
+// ============ STYLES ============
 
 const overlayStyle: CSSProperties = {
   position: "fixed",
