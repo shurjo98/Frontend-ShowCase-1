@@ -21,7 +21,6 @@ function NewsFeedCard() {
           <HoverRow key={index} style={newsBlockStyle}>
             <div style={newsMetaStyle}>{item.time}</div>
             <h4 style={newsTitleStyle}>{item.title}</h4>
-            <p style={newsTextStyle}>{item.description}</p>
 
             <div
               style={{
@@ -82,7 +81,7 @@ const newsBlockStyle: CSSProperties = {
   borderRadius: "18px",
   padding: "16px",
   overflow: "hidden",
-  minHeight: "120px",
+  minHeight: "96px",
   backgroundColor: "#fcfcfd",
 };
 
@@ -93,21 +92,13 @@ const newsMetaStyle: CSSProperties = {
 };
 
 const newsTitleStyle: CSSProperties = {
-  margin: "0 0 10px 0",
-  fontSize: "20px",
-  lineHeight: 1.35,
+  margin: 0,
+  fontSize: "18px",
+  lineHeight: 1.4,
   fontWeight: 600,
   color: colors.slate700,
   letterSpacing: "-0.01em",
   maxWidth: "78%",
-};
-
-const newsTextStyle: CSSProperties = {
-  margin: 0,
-  fontSize: "14px",
-  lineHeight: 1.5,
-  color: colors.slate400,
-  maxWidth: "76%",
 };
 
 const cornerAccentStyle: CSSProperties = {

@@ -55,7 +55,14 @@ function DashboardPage() {
 
       <section style={summaryGridStyle}>
         {summaryCards.map((card, index) => (
-          <SummaryCard key={index} {...card} />
+          <SummaryCard
+            key={index}
+            title={card.title}
+            subtitle={card.subtitle}
+            value={card.value}
+            change={card.change}
+            trend={card.trend === "up" ? "up" : "down"}
+          />
         ))}
       </section>
 

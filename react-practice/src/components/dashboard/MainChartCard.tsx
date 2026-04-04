@@ -17,6 +17,11 @@ import HoverButton from "../ui/HoverButton";
 
 type RangeKey = "1m" | "5m" | "15m" | "1h" | "4h" | "1d";
 
+type ChartPoint = {
+  label: string;
+  value: number;
+};
+
 const rangeButtons: Array<{ label: string; value: RangeKey }> = [
   { label: "1 min", value: "1m" },
   { label: "5 min", value: "5m" },
@@ -29,15 +34,22 @@ const rangeButtons: Array<{ label: string; value: RangeKey }> = [
 function MainChartCard() {
   const [activeRange, setActiveRange] = useState<RangeKey>("1h");
 
-  const chartData = performanceChartByRange[activeRange];
+  const chartData: ChartPoint[] = useMemo(() => {
+    return performanceChartByRange[activeRange].map((item) => ({
+      label: String(item.label),
+      value: Number(item.value),
+    }));
+  }, [activeRange]);
 
   const currentValue = chartData[chartData.length - 1]?.value ?? 0;
   const previousValue = chartData[chartData.length - 2]?.value ?? currentValue;
 
   const changePercent = useMemo(() => {
-    if (previousValue === 0) return "0.00%";
+    if (previousValue <= 0) return "0.00%";
+
     const change = ((currentValue - previousValue) / previousValue) * 100;
     const sign = change > 0 ? "+" : "";
+
     return `${sign}${change.toFixed(2)}%`;
   }, [currentValue, previousValue]);
 
@@ -125,8 +137,16 @@ function MainChartCard() {
               </linearGradient>
 
               <linearGradient id="performanceFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={colors.primaryGlow} stopOpacity={0.32} />
-                <stop offset="55%" stopColor={colors.primary} stopOpacity={0.12} />
+                <stop
+                  offset="0%"
+                  stopColor={colors.primaryGlow}
+                  stopOpacity={0.32}
+                />
+                <stop
+                  offset="55%"
+                  stopColor={colors.primary}
+                  stopOpacity={0.12}
+                />
                 <stop offset="100%" stopColor="#ffffff" stopOpacity={0.02} />
               </linearGradient>
             </defs>
@@ -148,7 +168,7 @@ function MainChartCard() {
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 12, fill: colors.slate400 }}
-              tickFormatter={(value) => `${Math.round(value / 1000)}k`}
+              tickFormatter={(value: number) => `${Math.round(value / 1000)}k`}
             />
 
             <Tooltip content={<ChartTooltip />} />

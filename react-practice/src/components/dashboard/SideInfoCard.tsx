@@ -20,8 +20,8 @@ function SideInfoCard() {
 
     return sideListItems.map((item, index) => ({
       name: item.name,
-      value: item.value,
-      trend: item.trend,
+      value: Number(item.value),
+      trend: item.trend === "up" ? "up" : "down",
       status: statuses[index % statuses.length],
     }));
   }, []);
@@ -38,8 +38,6 @@ function SideInfoCard() {
 
     return copied.sort((a, b) => b.value - a.value);
   }, [items, sortMode]);
-
-  const selectedItem = sortedItems[selectedIndex] ?? null;
 
   return (
     <Card style={cardStyle}>
@@ -62,34 +60,36 @@ function SideInfoCard() {
             const isSelected = index === selectedIndex;
 
             return (
-              <HoverRow
+              <div
                 key={item.name}
                 onClick={() => setSelectedIndex(index)}
-                style={{
-                  ...rowStyle,
-                  ...(isSelected ? selectedRowStyle : {}),
-                }}
+                style={{ cursor: "pointer" }}
               >
-                <div style={leftStyle}>
-                  <div
-                    style={{
-                      ...dotStyle,
-                      backgroundColor: getPriorityColor(item.value),
-                    }}
-                  />
-                  <div style={textBlockStyle}>
-                    <span style={nameStyle}>{item.name}</span>
-                    <span style={metaStyle}>{formatStatus(item.status)}</span>
+                <HoverRow
+                  style={{
+                    ...rowStyle,
+                    ...(isSelected ? selectedRowStyle : {}),
+                  }}
+                >
+                  <div style={leftStyle}>
+                    <div
+                      style={{
+                        ...dotStyle,
+                        backgroundColor: getPriorityColor(item.value),
+                      }}
+                    />
+                    <div style={textBlockStyle}>
+                      <span style={nameStyle}>{item.name}</span>
+                      <span style={metaStyle}>{formatStatus(item.status)}</span>
+                    </div>
                   </div>
-                </div>
 
-                <span style={scoreStyle}>{getPriorityLabel(item.value)}</span>
-              </HoverRow>
+                  <span style={scoreStyle}>{getPriorityLabel(item.value)}</span>
+                </HoverRow>
+              </div>
             );
           })}
         </div>
-
-       
       </div>
     </Card>
   );
@@ -112,13 +112,6 @@ function getPriorityColor(value: number) {
   if (value >= 80) return "#ef4444";
   if (value >= 45) return "#f59e0b";
   return "#22c55e";
-}
-
-function getSuggestedAction(score: number, status: QueueStatus) {
-  if (status === "waiting") return "Follow up with customer.";
-  if (score >= 80) return "Escalate to technician.";
-  if (score >= 45) return "Monitor and assign soon.";
-  return "Keep in normal queue.";
 }
 
 const cardStyle: CSSProperties = {
@@ -158,7 +151,6 @@ const bodyStyle: CSSProperties = {
 };
 
 const listPanelStyle: CSSProperties = {
-  borderRight: "1px solid #eef2f7",
   display: "flex",
   flexDirection: "column",
 };
@@ -170,7 +162,6 @@ const rowStyle: CSSProperties = {
   gap: "12px",
   padding: "18px",
   borderBottom: "1px solid #eef2f7",
-  cursor: "pointer",
   transition: "all 0.2s ease",
 };
 
@@ -214,81 +205,6 @@ const metaStyle: CSSProperties = {
 const scoreStyle: CSSProperties = {
   fontSize: "13px",
   fontWeight: 700,
-  color: "#0f172a",
-};
-
-const detailsPanelStyle: CSSProperties = {
-  padding: "20px",
-  display: "flex",
-  flexDirection: "column",
-  gap: "18px",
-  backgroundColor: "#fcfcfd",
-};
-
-const detailsHeaderStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "12px",
-};
-
-const detailDotStyle: CSSProperties = {
-  width: "12px",
-  height: "12px",
-  borderRadius: "999px",
-  flexShrink: 0,
-};
-
-const detailsTitleStyle: CSSProperties = {
-  margin: 0,
-  fontSize: "18px",
-  fontWeight: 700,
-  color: "#0f172a",
-};
-
-const detailsSubtitleStyle: CSSProperties = {
-  margin: "4px 0 0",
-  fontSize: "13px",
-  color: "#64748b",
-};
-
-const scoreBoxStyle: CSSProperties = {
-  padding: "16px",
-  borderRadius: "16px",
-  backgroundColor: "#ffffff",
-  border: "1px solid #e2e8f0",
-  display: "flex",
-  flexDirection: "column",
-  gap: "6px",
-};
-
-const scoreLabelStyle: CSSProperties = {
-  fontSize: "12px",
-  fontWeight: 600,
-  color: "#64748b",
-};
-
-const scoreValueStyle: CSSProperties = {
-  fontSize: "28px",
-  fontWeight: 800,
-  color: "#0f172a",
-};
-
-const summaryBlockStyle: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "8px",
-};
-
-const summaryLabelStyle: CSSProperties = {
-  fontSize: "12px",
-  fontWeight: 600,
-  color: "#64748b",
-};
-
-const summaryTextStyle: CSSProperties = {
-  margin: 0,
-  fontSize: "14px",
-  lineHeight: 1.5,
   color: "#0f172a",
 };
 
