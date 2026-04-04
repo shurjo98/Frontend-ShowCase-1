@@ -1,4 +1,48 @@
-export const summaryCards = [
+export type SummaryTrend = "up" | "down";
+
+export type SummaryCardItem = {
+  title: string;
+  subtitle: string;
+  value: string;
+  change: string;
+  trend: SummaryTrend;
+};
+
+export type SideListItem = {
+  name: string;
+  value: number;
+  change: string;
+  trend: SummaryTrend;
+};
+
+export type NewsItem = {
+  time: string;
+  title: string;
+  tag: string;
+  accent: string;
+};
+
+export type ActivityCategory = "machines" | "visits" | "tickets";
+export type ActivityStatusType = "positive" | "negative" | "neutral";
+
+export type ActivityItem = {
+  time: string;
+  category: ActivityCategory;
+  machine: string;
+  detail: string;
+  source: string;
+  status: string;
+  statusType: ActivityStatusType;
+};
+
+export type ChartPoint = {
+  label: string;
+  value: number;
+};
+
+export type RangeKey = "1m" | "5m" | "15m" | "1h" | "4h" | "1d";
+
+export const summaryCards: SummaryCardItem[] = [
   {
     title: "Machines Running",
     subtitle: "Production Floor",
@@ -29,34 +73,34 @@ export const summaryCards = [
   },
 ];
 
-export const sideListItems = [
+export const sideListItems: SideListItem[] = [
   {
     name: "Line A-12 Motor Overheat",
-    value: "High",
+    value: 82,
     change: "+12%",
     trend: "up",
   },
   {
     name: "Thread Break Spike - Unit 5",
-    value: "Medium",
+    value: 58,
     change: "+4%",
     trend: "up",
   },
   {
     name: "Needle Wear Detected",
-    value: "Low",
+    value: 24,
     change: "-2%",
     trend: "down",
   },
   {
     name: "Oil Level Drop - Zone B",
-    value: "Critical",
+    value: 95,
     change: "+18%",
     trend: "up",
   },
 ];
 
-export const newsItems = [
+export const newsItems: NewsItem[] = [
   {
     time: "Today",
     title: "AI predicts 18% failure risk in Line A within next 6 hours",
@@ -71,7 +115,7 @@ export const newsItems = [
   },
 ];
 
-export const activityItems = [
+export const activityItems: ActivityItem[] = [
   {
     time: "11:02",
     category: "machines",
@@ -128,7 +172,7 @@ export const activityItems = [
   },
 ];
 
-export const performanceChartData = [
+export const performanceChartData: ChartPoint[] = [
   { label: "Mon", value: 712000 },
   { label: "Tue", value: 718500 },
   { label: "Wed", value: 721200 },
@@ -138,7 +182,7 @@ export const performanceChartData = [
   { label: "Sun", value: 721882 },
 ];
 
-export const performanceChartByRange = {
+export const performanceChartByRange: Record<RangeKey, ChartPoint[]> = {
   "1m": [
     { label: "10:00", value: 721200 },
     { label: "10:05", value: 721450 },
@@ -188,4 +232,4 @@ export const performanceChartByRange = {
     { label: "May", value: 718000 },
     { label: "Jun", value: 721882 },
   ],
-} as const;
+};

@@ -12,7 +12,7 @@ import NewsFeedCard from "../components/dashboard/NewsFeedCard";
 import { summaryCards } from "../data/dashboardData";
 
 function DashboardPage() {
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth);
 
   useEffect(() => {
     function handleResize() {
@@ -20,7 +20,10 @@ function DashboardPage() {
     }
 
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const isMobile = screenWidth < 768;
@@ -54,16 +57,20 @@ function DashboardPage() {
       <WelcomeBar screenWidth={screenWidth} />
 
       <section style={summaryGridStyle}>
-        {summaryCards.map((card, index) => (
-          <SummaryCard
-            key={index}
-            title={card.title}
-            subtitle={card.subtitle}
-            value={card.value}
-            change={card.change}
-            trend={card.trend === "up" ? "up" : "down"}
-          />
-        ))}
+        {summaryCards.map((card, index) => {
+          const trend = card.trend === "up" ? "up" : "down";
+
+          return (
+            <SummaryCard
+              key={`${card.title}-${index}`}
+              title={String(card.title)}
+              subtitle={String(card.subtitle)}
+              value={String(card.value)}
+              change={String(card.change)}
+              trend={trend}
+            />
+          );
+        })}
       </section>
 
       <section style={middleGridStyle}>

@@ -34,15 +34,17 @@ const rangeButtons: Array<{ label: string; value: RangeKey }> = [
 function MainChartCard() {
   const [activeRange, setActiveRange] = useState<RangeKey>("1h");
 
-  const chartData: ChartPoint[] = useMemo(() => {
-    return performanceChartByRange[activeRange].map((item) => ({
+  const chartData = useMemo<ChartPoint[]>(() => {
+    const rawData = performanceChartByRange[activeRange] ?? [];
+
+    return rawData.map((item): ChartPoint => ({
       label: String(item.label),
       value: Number(item.value),
     }));
   }, [activeRange]);
 
-  const currentValue = chartData[chartData.length - 1]?.value ?? 0;
-  const previousValue = chartData[chartData.length - 2]?.value ?? currentValue;
+  const currentValue = chartData.at(-1)?.value ?? 0;
+  const previousValue = chartData.at(-2)?.value ?? currentValue;
 
   const changePercent = useMemo(() => {
     if (previousValue <= 0) return "0.00%";
@@ -57,8 +59,11 @@ function MainChartCard() {
   const trendColor = isNegative ? colors.danger : colors.success;
   const trendBg = isNegative ? colors.dangerSoft : colors.successSoft;
 
-  const highValue = Math.max(...chartData.map((item) => item.value));
-  const lowValue = Math.min(...chartData.map((item) => item.value));
+  const highValue =
+    chartData.length > 0 ? Math.max(...chartData.map((item) => item.value)) : 0;
+
+  const lowValue =
+    chartData.length > 0 ? Math.min(...chartData.map((item) => item.value)) : 0;
 
   return (
     <Card style={cardStyle}>
@@ -115,6 +120,7 @@ function MainChartCard() {
           return (
             <button
               key={button.value}
+              type="button"
               onClick={() => setActiveRange(button.value)}
               style={isActive ? activeFilterButtonStyle : filterButtonStyle}
             >
@@ -131,7 +137,13 @@ function MainChartCard() {
             margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
           >
             <defs>
-              <linearGradient id="performanceStroke" x1="0" y1="0" x2="1" y2="0">
+              <linearGradient
+                id="performanceStroke"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="0"
+              >
                 <stop offset="0%" stopColor={colors.cyan} />
                 <stop offset="100%" stopColor={colors.primaryGlow} />
               </linearGradient>

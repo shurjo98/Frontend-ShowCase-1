@@ -3,12 +3,14 @@ import { Activity } from "lucide-react";
 import { colors } from "../../theme/colors";
 import HoverCard from "../ui/HoverCard";
 
-type SummaryCardProps = {
+export type SummaryTrend = "up" | "down";
+
+export type SummaryCardProps = {
   title: string;
   subtitle: string;
   value: string;
   change: string;
-  trend: "up" | "down";
+  trend: SummaryTrend;
 };
 
 function SummaryCard({
@@ -38,6 +40,7 @@ function SummaryCard({
 
       <div style={bottomRowStyle}>
         <div style={valueStyle}>{value}</div>
+
         <div
           style={{
             ...pillStyle,

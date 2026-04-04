@@ -8,204 +8,206 @@ import HoverRow from "../ui/HoverRow";
 import ActivityDetailsDrawer from "./ActivityDetailsDrawer";
 
 type FilterType = "all" | "tickets" | "machines" | "visits";
-type ActivityItem = (typeof activityItems)[number];
+
+type ActivityItem = {
+  time: string;
+  category: "tickets" | "machines" | "visits";
+  machine: string;
+  detail: string;
+  source: string;
+  status: string;
+  statusType: "positive" | "negative" | "neutral";
+};
 
 function ActivityTable() {
-    const [activeFilter, setActiveFilter] = useState<FilterType>("all");
-    const [selectedItem, setSelectedItem] = useState<ActivityItem | null>(null);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const [selectedItem, setSelectedItem] = useState<ActivityItem | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const filteredItems = useMemo(() => {
-        if (activeFilter === "all") return activityItems;
-        return activityItems.filter((item) => item.category === activeFilter);
-    }, [activeFilter]);
+  const rowRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-    function handleRowClick(item: ActivityItem) {
-        setSelectedItem(item);
-        setIsDrawerOpen(true);
+  const filteredItems = useMemo(() => {
+    if (activeFilter === "all") return activityItems;
+    return activityItems.filter((item) => item.category === activeFilter);
+  }, [activeFilter]);
 
-        const key = `${item.time}-${item.machine}-${item.detail}`;
-        const rowEl = rowRefs.current[key];
+  function handleRowClick(item: ActivityItem) {
+    setSelectedItem(item);
+    setIsDrawerOpen(true);
 
-        if (rowEl) {
-            rowEl.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
-            });
-        }
+    const key = `${item.time}-${item.machine}-${item.detail}`;
+    const rowEl = rowRefs.current[key];
+
+    if (rowEl) {
+      rowEl.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }
+
+  function handleCloseDrawer() {
+    setIsDrawerOpen(false);
+  }
+
+  const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth);
+
+  useEffect(() => {
+    function handleResize() {
+      setScreenWidth(window.innerWidth);
     }
 
-    function handleCloseDrawer() {
-        setIsDrawerOpen(false);
-    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-    const rowRefs = useRef<Record<string, HTMLDivElement | null>>({});
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const isMobile = screenWidth < 768;
 
-    useEffect(() => {
-        function handleResize() {
-            setScreenWidth(window.innerWidth);
-        }
+  const selectedRowMobileStyle: CSSProperties = {
+    outline: `2px solid ${colors.primary}`,
+    outlineOffset: "-2px",
+  };
 
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+  return (
+    <>
+      <Card style={cardStyle}>
+        <div style={headerStyle}>
+          <div>
+            <h3 style={titleStyle}>Live Operations Feed</h3>
+            <p style={subtitleStyle}>
+              Real-time maintenance events, AI alerts, and technician activity
+            </p>
+          </div>
 
-    const isMobile = screenWidth < 768;
+          <div style={tabsStyle}>
+            {["all", "tickets", "machines", "visits"].map((type) => (
+              <button
+                key={type}
+                onClick={() => setActiveFilter(type as FilterType)}
+                style={
+                  activeFilter === type ? activeTabStyle : tabStyle
+                }
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
 
-    const selectedRowMobileStyle: CSSProperties = {
-        outline: `2px solid ${colors.primary}`,
-        outlineOffset: "-2px",
-    };
+        <div style={listStyle}>
+          {filteredItems.map((item) => {
+            const rowKey = `${item.time}-${item.machine}-${item.detail}`;
 
-    return (
-        <>
-            <Card style={cardStyle}>
-                <div style={headerStyle}>
-                    <div>
-                        <h3 style={titleStyle}>Live Operations Feed</h3>
-                        <p style={subtitleStyle}>
-                            Real-time maintenance events, AI alerts, and technician activity
-                        </p>
-                    </div>
+            const isSelected =
+              isDrawerOpen &&
+              selectedItem?.time === item.time &&
+              selectedItem?.machine === item.machine &&
+              selectedItem?.detail === item.detail;
 
-                    <div style={tabsStyle}>
-                        <button
-                            onClick={() => setActiveFilter("all")}
-                            style={activeFilter === "all" ? activeTabStyle : tabStyle}
-                        >
-                            All
-                        </button>
-                        <button
-                            onClick={() => setActiveFilter("tickets")}
-                            style={activeFilter === "tickets" ? activeTabStyle : tabStyle}
-                        >
-                            Tickets
-                        </button>
-                        <button
-                            onClick={() => setActiveFilter("machines")}
-                            style={activeFilter === "machines" ? activeTabStyle : tabStyle}
-                        >
-                            Machines
-                        </button>
-                        <button
-                            onClick={() => setActiveFilter("visits")}
-                            style={activeFilter === "visits" ? activeTabStyle : tabStyle}
-                        >
-                            Visits
-                        </button>
-                    </div>
+            return (
+              <HoverRow
+                key={rowKey}
+                ref={(el) => {
+                  rowRefs.current[rowKey] = el;
+                }}
+                style={{
+                  ...rowStyle,
+                  ...(isSelected ? selectedRowStyle : {}),
+                  ...(isSelected && isMobile ? selectedRowMobileStyle : {}),
+                  cursor: "pointer",
+                }}
+              >
+                {/* Click layer */}
+                <div
+                  style={rowClickLayerStyle}
+                  onClick={() => handleRowClick(item)}
+                />
+
+                <div style={timeColStyle}>
+                  <div style={timeStyle}>{item.time}</div>
                 </div>
 
-                <div style={listStyle}>
-                    {filteredItems.map((item) => {
-                        const rowKey = `${item.time}-${item.machine}-${item.detail}`;
-
-                        const isSelected =
-                            isDrawerOpen &&
-                            selectedItem?.time === item.time &&
-                            selectedItem?.machine === item.machine &&
-                            selectedItem?.detail === item.detail;
-
-                        return (
-                            <HoverRow
-                                ref={(el) => {
-                                    rowRefs.current[rowKey] = el;
-                                }}
-                                key={rowKey}
-                                style={{
-                                    ...rowStyle,
-                                    ...(isSelected ? selectedRowStyle : {}),
-                                    ...(isSelected && isMobile ? selectedRowMobileStyle : {}),
-                                    cursor: "pointer",
-                                }}
-                            >
-                                <div
-                                    style={rowClickLayerStyle}
-                                    onClick={() => handleRowClick(item)}
-                                />
-
-                                <div style={timeColStyle}>
-                                    <div style={timeStyle}>{item.time}</div>
-                                </div>
-
-                                <div style={iconColStyle}>
-                                    <div
-                                        style={{
-                                            ...iconWrapStyle,
-                                            ...(isSelected ? selectedIconWrapStyle : {}),
-                                        }}
-                                    >
-                                        {getActivityIcon(item.category)}
-                                    </div>
-                                </div>
-
-                                <div style={contentColStyle}>
-                                    <div style={machineStyle}>{item.machine}</div>
-                                    <div style={detailStyle}>{item.detail}</div>
-                                    <div style={sourceStyle}>Source: {item.source}</div>
-                                </div>
-
-                                <div style={rightColStyle}>
-                                    <span
-                                        style={{
-                                            ...statusStyle,
-                                            ...getStatusTheme(item.statusType),
-                                        }}
-                                    >
-                                        {item.status}
-                                    </span>
-
-                                    <div
-                                        style={{
-                                            ...arrowWrapStyle,
-                                            color: isSelected ? colors.primary : colors.slate400,
-                                        }}
-                                    >
-                                        <ArrowRight size={16} />
-                                    </div>
-                                </div>
-                            </HoverRow>
-                        );
-                    })}
+                <div style={iconColStyle}>
+                  <div
+                    style={{
+                      ...iconWrapStyle,
+                      ...(isSelected ? selectedIconWrapStyle : {}),
+                    }}
+                  >
+                    {getActivityIcon(item.category)}
+                  </div>
                 </div>
-            </Card>
 
-            <ActivityDetailsDrawer
-                item={selectedItem}
-                isOpen={isDrawerOpen}
-                onClose={handleCloseDrawer}
-                screenWidth={screenWidth}
-            />
-        </>
-    );
+                <div style={contentColStyle}>
+                  <div style={machineStyle}>{item.machine}</div>
+                  <div style={detailStyle}>{item.detail}</div>
+                  <div style={sourceStyle}>Source: {item.source}</div>
+                </div>
+
+                <div style={rightColStyle}>
+                  <span
+                    style={{
+                      ...statusStyle,
+                      ...getStatusTheme(item.statusType),
+                    }}
+                  >
+                    {item.status}
+                  </span>
+
+                  <div
+                    style={{
+                      ...arrowWrapStyle,
+                      color: isSelected
+                        ? colors.primary
+                        : colors.slate400,
+                    }}
+                  >
+                    <ArrowRight size={16} />
+                  </div>
+                </div>
+              </HoverRow>
+            );
+          })}
+        </div>
+      </Card>
+
+      <ActivityDetailsDrawer
+        item={selectedItem}
+        isOpen={isDrawerOpen}
+        onClose={handleCloseDrawer}
+        screenWidth={screenWidth}
+      />
+    </>
+  );
 }
 
+/* helpers */
+
 function getActivityIcon(category: string) {
-    if (category === "tickets") return <Ticket size={16} />;
-    if (category === "machines") return <Cpu size={16} />;
-    return <Wrench size={16} />;
+  if (category === "tickets") return <Ticket size={16} />;
+  if (category === "machines") return <Cpu size={16} />;
+  return <Wrench size={16} />;
 }
 
 function getStatusTheme(statusType: string): CSSProperties {
-    if (statusType === "positive") {
-        return {
-            color: colors.success,
-            backgroundColor: colors.successSoft,
-        };
-    }
-
-    if (statusType === "negative") {
-        return {
-            color: colors.danger,
-            backgroundColor: colors.dangerSoft,
-        };
-    }
-
+  if (statusType === "positive") {
     return {
-        color: colors.slate700,
-        backgroundColor: colors.surfaceSoft,
+      color: colors.success,
+      backgroundColor: colors.successSoft,
     };
+  }
+
+  if (statusType === "negative") {
+    return {
+      color: colors.danger,
+      backgroundColor: colors.dangerSoft,
+    };
+  }
+
+  return {
+    color: colors.slate700,
+    backgroundColor: colors.surfaceSoft,
+  };
 }
 
 const cardStyle: CSSProperties = {

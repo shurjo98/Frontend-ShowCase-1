@@ -1,17 +1,28 @@
 import { useEffect } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { X, Cpu, Ticket, Wrench, Clock3, User, CircleAlert } from "lucide-react";
+import {
+  X,
+  Cpu,
+  Ticket,
+  Wrench,
+  Clock3,
+  User,
+  CircleAlert,
+} from "lucide-react";
 import { colors } from "../../theme/colors";
 import HoverButton from "../ui/HoverButton";
 
+type ActivityCategory = "tickets" | "machines" | "visits" | string;
+type StatusType = "positive" | "negative" | "neutral" | string;
+
 type ActivityItem = {
   time: string;
-  category: string;
+  category: ActivityCategory;
   machine: string;
   detail: string;
   source: string;
   status: string;
-  statusType: string;
+  statusType: StatusType;
 };
 
 type ActivityDetailsDrawerProps = {
@@ -19,6 +30,12 @@ type ActivityDetailsDrawerProps = {
   isOpen: boolean;
   onClose: () => void;
   screenWidth: number;
+};
+
+type InfoRowProps = {
+  icon: ReactNode;
+  label: string;
+  value: string;
 };
 
 function ActivityDetailsDrawer({
@@ -57,6 +74,7 @@ function ActivityDetailsDrawer({
       />
 
       <aside
+        aria-hidden={!isOpen}
         style={{
           ...drawerStyle,
           width: isMobile ? "100vw" : "420px",
@@ -118,6 +136,16 @@ function ActivityDetailsDrawer({
               </div>
             </div>
 
+            <div style={infoSectionStyle}>
+              <div style={sectionTitleStyle}>Recommended Actions</div>
+
+              <div style={actionListStyle}>
+                <div style={actionItemStyle}>Review the machine history</div>
+                <div style={actionItemStyle}>Check technician availability</div>
+                <div style={actionItemStyle}>Create or link a support ticket</div>
+              </div>
+            </div>
+
             <div style={buttonRowStyle}>
               <HoverButton style={secondaryButtonStyle}>
                 Create Ticket
@@ -136,16 +164,11 @@ function ActivityDetailsDrawer({
   );
 }
 
-type InfoRowProps = {
-  icon: ReactNode;
-  label: string;
-  value: string;
-};
-
 function InfoRow({ icon, label, value }: InfoRowProps) {
   return (
     <div style={infoRowStyle}>
       <div style={infoIconStyle}>{icon}</div>
+
       <div>
         <div style={infoLabelStyle}>{label}</div>
         <div style={infoValueStyle}>{value}</div>
@@ -154,20 +177,20 @@ function InfoRow({ icon, label, value }: InfoRowProps) {
   );
 }
 
-function getActivityIcon(category: string) {
+function getActivityIcon(category: ActivityCategory) {
   if (category === "tickets") return <Ticket size={18} />;
   if (category === "machines") return <Cpu size={18} />;
   return <Wrench size={18} />;
 }
 
-function formatCategory(category: string) {
+function formatCategory(category: ActivityCategory) {
   if (category === "tickets") return "Support Ticket";
   if (category === "machines") return "Machine Alert";
   if (category === "visits") return "Technician Visit";
   return category;
 }
 
-function getStatusTheme(statusType: string): CSSProperties {
+function getStatusTheme(statusType: StatusType): CSSProperties {
   if (statusType === "positive") {
     return {
       color: colors.success,
@@ -349,6 +372,22 @@ const infoLabelStyle: CSSProperties = {
 };
 
 const infoValueStyle: CSSProperties = {
+  fontSize: "14px",
+  fontWeight: 600,
+  color: colors.slate700,
+};
+
+const actionListStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+};
+
+const actionItemStyle: CSSProperties = {
+  padding: "12px 14px",
+  borderRadius: "14px",
+  border: `1px solid ${colors.border}`,
+  backgroundColor: colors.surfaceSoft,
   fontSize: "14px",
   fontWeight: 600,
   color: colors.slate700,

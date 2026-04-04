@@ -5,7 +5,21 @@ import Card from "../ui/Card";
 import HoverRow from "../ui/HoverRow";
 import HoverButton from "../ui/HoverButton";
 
+type NewsItem = {
+  time: string;
+  title: string;
+  tag: string;
+  accent: string;
+};
+
 function NewsFeedCard() {
+  const items: NewsItem[] = newsItems.map((item) => ({
+    time: String(item.time),
+    title: String(item.title),
+    tag: String(item.tag),
+    accent: String(item.accent),
+  }));
+
   return (
     <Card style={cardStyle}>
       <div style={headerStyle}>
@@ -17,8 +31,11 @@ function NewsFeedCard() {
       </div>
 
       <div style={contentStyle}>
-        {newsItems.map((item, index) => (
-          <HoverRow key={index} style={newsBlockStyle}>
+        {items.map((item) => (
+          <HoverRow
+            key={`${item.time}-${item.title}`}
+            style={newsBlockStyle}
+          >
             <div style={newsMetaStyle}>{item.time}</div>
             <h4 style={newsTitleStyle}>{item.title}</h4>
 
