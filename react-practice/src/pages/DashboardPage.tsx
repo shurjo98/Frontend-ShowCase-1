@@ -90,6 +90,8 @@ const pageStyle: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   gap: "20px",
+  width: "100%",
+  minWidth: 0,
 };
 
 export default DashboardPage;

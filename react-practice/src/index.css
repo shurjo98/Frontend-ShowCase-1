@@ -1,11 +1,6 @@
 @import "tailwindcss";
 
 
-body {
-  margin: 0;
-}
-
-
 :root {
   --text: #6b6375;
   --text-h: #08060d;
