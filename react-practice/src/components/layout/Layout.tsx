@@ -22,16 +22,11 @@ import {
 function Layout() {
   const [serviceOpen, setServiceOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth < 1024;
-      setIsMobile(mobile);
-
-      if (!mobile) {
-        setIsMobileMenuOpen(false);
-      }
+      setScreenWidth(window.innerWidth);
     };
 
     handleResize();
@@ -39,6 +34,30 @@ function Layout() {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const isMobile = screenWidth < 768;
+  const isTablet = screenWidth >= 768 && screenWidth < 1100;
+  const isCompactSidebar = isMobile || isTablet;
+
+  const mainOuterStyle: CSSProperties = {
+    ...mainStyle,
+    marginLeft: isCompactSidebar ? 0 : "0px",
+    paddingTop: isCompactSidebar ? "88px" : "24px",
+    paddingLeft: isCompactSidebar ? "14px" : "8px",
+    paddingRight: isCompactSidebar ? "14px" : "16px",
+    paddingBottom: isCompactSidebar ? "18px" : "24px",
+  };
+
+  const mainInnerStyle: CSSProperties = {
+    width: "100%",
+    maxWidth: "1400px",
+  };
+
+  useEffect(() => {
+    if (!isCompactSidebar) {
+      setIsMobileMenuOpen(false);
+    }
+  }, [isCompactSidebar]);
 
   useEffect(() => {
     if (!isMobileMenuOpen) return;
@@ -59,7 +78,7 @@ function Layout() {
 
   return (
     <div style={wrapperStyle}>
-      {isMobile && (
+      {isCompactSidebar && (
         <header style={mobileHeaderStyle}>
           <div style={mobileHeaderLeftStyle}>
             <div style={mobileLogoBoxStyle}>F</div>
@@ -80,7 +99,7 @@ function Layout() {
         </header>
       )}
 
-      {isMobile && (
+      {isCompactSidebar && (
         <div
           style={{
             ...overlayStyle,
@@ -94,15 +113,16 @@ function Layout() {
       <aside
         style={{
           ...sidebarStyle,
-          ...(isMobile ? mobileSidebarStyle : desktopSidebarStyle),
+          ...(isCompactSidebar ? mobileSidebarStyle : desktopSidebarStyle),
           transform:
-            isMobile && !isMobileMenuOpen ? "translateX(-108%)" : "translateX(0)",
+            isCompactSidebar && !isMobileMenuOpen
+              ? "translateX(-108%)"
+              : "translateX(0)",
         }}
       >
         <div style={sidebarInnerStyle}>
           <div>
-            <div style={isMobile ? mobileBrandCardStyle : brandStyle}>
-              <div style={logoBoxStyle}>F</div>
+            <div style={isCompactSidebar ? mobileBrandCardStyle : brandStyle}>              <div style={logoBoxStyle}>F</div>
               <div>
                 <h2 style={brandTitleStyle}>FM SUPPORT</h2>
                 <p style={brandSubStyle}>Dashboard</p>
@@ -117,7 +137,7 @@ function Layout() {
               </SidebarLink>
 
               <SidebarLink
-                to="/tickets"
+                to="/"
                 icon={<Ticket size={18} />}
                 badge="3"
                 onNavigate={closeMobileMenu}
@@ -126,9 +146,10 @@ function Layout() {
               </SidebarLink>
 
               <SidebarLink
-                to="/machines"
+                to="/"
                 icon={<Monitor size={18} />}
                 onNavigate={closeMobileMenu}
+
               >
                 Machines
               </SidebarLink>
@@ -157,16 +178,16 @@ function Layout() {
 
               {serviceOpen && (
                 <div style={submenuWrapperStyle}>
-                  <SubmenuLink to="/machines/status" onNavigate={closeMobileMenu} icon={<Activity size={16} />}>
+                  <SubmenuLink to="/" onNavigate={closeMobileMenu} icon={<Activity size={16} />}>
                     Machine Status
                   </SubmenuLink>
-                  <SubmenuLink to="/machines/maintenance" onNavigate={closeMobileMenu} icon={<ClipboardList size={16} />}>
+                  <SubmenuLink to="/" onNavigate={closeMobileMenu} icon={<ClipboardList size={16} />}>
                     Maintenance Logs
                   </SubmenuLink>
-                  <SubmenuLink to="/machines/performance" onNavigate={closeMobileMenu} icon={<Gauge size={16} />}>
+                  <SubmenuLink to="/" onNavigate={closeMobileMenu} icon={<Gauge size={16} />}>
                     Performance
                   </SubmenuLink>
-                  <SubmenuLink to="/machines/alerts" onNavigate={closeMobileMenu} icon={<ShieldAlert size={16} />}>
+                  <SubmenuLink to="/" onNavigate={closeMobileMenu} icon={<ShieldAlert size={16} />}>
                     Alerts
                   </SubmenuLink>
                 </div>
@@ -177,7 +198,7 @@ function Layout() {
               <p style={sectionTitleStyle}>Account</p>
 
               <SidebarLink
-                to="/notifications"
+                to="/"
                 icon={<Bell size={18} />}
                 onNavigate={closeMobileMenu}
               >
@@ -185,7 +206,7 @@ function Layout() {
               </SidebarLink>
 
               <SidebarLink
-                to="/settings"
+                to="/"
                 icon={<Settings size={18} />}
                 onNavigate={closeMobileMenu}
               >
@@ -195,28 +216,25 @@ function Layout() {
           </div>
 
           <div style={bottomSectionStyle}>
-            <SidebarLink to="/logout" icon={<LogOut size={18} />} onNavigate={closeMobileMenu}>
+            <SidebarLink to="/" icon={<LogOut size={18} />} onNavigate={closeMobileMenu}>
               Log Out
             </SidebarLink>
           </div>
         </div>
       </aside>
 
-      <main
-        style={{
-          ...mainStyle,
-          paddingTop: isMobile ? "88px" : "32px",
-          paddingLeft: isMobile ? "14px" : "16px",
-          paddingRight: isMobile ? "14px" : "24px",
-          paddingBottom: isMobile ? "18px" : "32px",
-        }}
-      >
-        
-      <Outlet />
-    </main>
+      <main style={mainOuterStyle}>
+        <div style={mainInnerStyle}>
+          <Outlet />
+        </div>
+      </main>
+
     </div >
+
   );
 }
+
+
 
 type SidebarLinkProps = {
   to: string;
@@ -225,6 +243,8 @@ type SidebarLinkProps = {
   badge?: string;
   end?: boolean;
   onNavigate?: () => void;
+  disabled?: boolean;   // 👈 ADD THIS
+
 };
 
 function SidebarLink({
@@ -234,13 +254,24 @@ function SidebarLink({
   badge,
   end = false,
   onNavigate,
+  disabled = false,
 }: SidebarLinkProps) {
   return (
     <NavLink
-      to={to}
+      to={disabled ? "#" : to}
       end={end}
-      onClick={onNavigate}
-      style={({ isActive }) => getNavLinkStyle(isActive)}
+      onClick={(e) => {
+        if (disabled) {
+          e.preventDefault();   // 👈 THIS STOPS NAVIGATION
+          return;
+        }
+        onNavigate?.();
+      }}
+      style={({ isActive }) => ({
+        ...getNavLinkStyle(isActive),
+        opacity: disabled ? 0.5 : 1,
+        cursor: disabled ? "not-allowed" : "pointer",
+      })}
     >
       <span style={parentLeftStyle}>
         <span style={iconStyle}>{icon}</span>
@@ -272,26 +303,29 @@ function SubmenuLink({ to, children, icon, onNavigate }: SubmenuLinkProps) {
       </span>
     </NavLink>
   );
+
+
 }
+
 
 const wrapperStyle: CSSProperties = {
   display: "flex",
-  minHeight: "100vh",
+  height: "100vh",
   width: "100%",
   fontFamily: "Arial, sans-serif",
   backgroundColor: "#f5f7fb",
-  overflowX: "hidden",
+  overflow: "hidden",
 };
 
 const desktopSidebarStyle: CSSProperties = {
   position: "sticky",
   top: 0,
-  height: "100vh",
+  height: "100vh",          // 👈 IMPORTANT
   width: "270px",
   minWidth: "270px",
   maxWidth: "270px",
   flexShrink: 0,
-  zIndex: 40,
+  alignSelf: "flex-start",  // 👈 IMPORTANT
 };
 
 const mobileSidebarStyle: CSSProperties = {
@@ -470,6 +504,8 @@ const mainStyle: CSSProperties = {
   minWidth: 0,
   backgroundColor: "#f5f7fb",
   boxSizing: "border-box",
+  overflowY: "auto",   // 👈 KEY FIX
+
 };
 
 const bottomSectionStyle: CSSProperties = {
@@ -554,6 +590,7 @@ const submenuIconStyle: CSSProperties = {
   alignItems: "center",
   flexShrink: 0,
 };
+
 
 function getNavLinkStyle(isActive: boolean): CSSProperties {
   return {
