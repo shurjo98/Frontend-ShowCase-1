@@ -206,14 +206,15 @@ function Layout() {
         style={{
           ...mainStyle,
           paddingTop: isMobile ? "88px" : "32px",
-          paddingLeft: isMobile ? "14px" : "24px",
+          paddingLeft: isMobile ? "14px" : "16px",
           paddingRight: isMobile ? "14px" : "24px",
           paddingBottom: isMobile ? "18px" : "32px",
         }}
       >
-        <Outlet />
-      </main>
-    </div>
+        
+      <Outlet />
+    </main>
+    </div >
   );
 }
 
@@ -283,14 +284,13 @@ const wrapperStyle: CSSProperties = {
 };
 
 const desktopSidebarStyle: CSSProperties = {
-  position: "fixed",
+  position: "sticky",
   top: 0,
-  left: 0,
-  bottom: 0,
   height: "100vh",
   width: "270px",
   minWidth: "270px",
   maxWidth: "270px",
+  flexShrink: 0,
   zIndex: 40,
 };
 
