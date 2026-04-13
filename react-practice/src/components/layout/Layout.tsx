@@ -81,10 +81,9 @@ function Layout() {
       {isCompactSidebar && (
         <header style={mobileHeaderStyle}>
           <div style={mobileHeaderLeftStyle}>
-            <div style={mobileLogoBoxStyle}>F</div>
+            <div style={mobileLogoBoxStyle}>X</div>
             <div style={mobileBrandTextWrapStyle}>
-              <div style={mobileTitleStyle}>FM SUPPORT</div>
-              <div style={mobileSubtitleStyle}>Operations Dashboard</div>
+              <div style={mobileTitleStyle}>X SUPPORT</div>
             </div>
           </div>
 
@@ -122,10 +121,9 @@ function Layout() {
       >
         <div style={sidebarInnerStyle}>
           <div>
-            <div style={isCompactSidebar ? mobileBrandCardStyle : brandStyle}>              <div style={logoBoxStyle}>F</div>
+            <div style={isCompactSidebar ? mobileBrandCardStyle : brandStyle}>              <div style={logoBoxStyle}>X</div>
               <div>
-                <h2 style={brandTitleStyle}>FM SUPPORT</h2>
-                <p style={brandSubStyle}>Dashboard</p>
+                <h2 style={brandTitleStyle}>X SUPPORT</h2>
               </div>
             </div>
 
@@ -380,10 +378,15 @@ const mobileHeaderLeftStyle: CSSProperties = {
   alignItems: "center",
   gap: "10px",
   minWidth: 0,
+  flex: 1,
 };
 
 const mobileBrandTextWrapStyle: CSSProperties = {
   minWidth: 0,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  lineHeight: 1.1,
 };
 
 const mobileLogoBoxStyle: CSSProperties = {
@@ -405,16 +408,10 @@ const mobileTitleStyle: CSSProperties = {
   fontWeight: 700,
   letterSpacing: "0.08em",
   color: "#0f172a",
+  margin: 0,
+  lineHeight: 1.1,
 };
 
-const mobileSubtitleStyle: CSSProperties = {
-  fontSize: "11px",
-  color: "#64748b",
-  marginTop: "2px",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-};
 
 const menuButtonStyle: CSSProperties = {
   width: "40px",

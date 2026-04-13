@@ -36,7 +36,7 @@ function DashboardPage() {
       : isTablet
       ? "repeat(2, minmax(0, 1fr))"
       : "repeat(4, minmax(0, 1fr))",
-    gap: "16px",
+    gap: "8px",
   };
 
   const middleGridStyle: CSSProperties = {

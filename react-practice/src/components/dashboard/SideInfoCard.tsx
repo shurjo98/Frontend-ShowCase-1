@@ -87,17 +87,19 @@ function SideInfoCard() {
                         backgroundColor: getPriorityColor(item.value),
                       }}
                     />
-                    <div style={textBlockStyle}>
-                      <span style={nameStyle}>{item.name}</span>
-                      <span style={metaStyle}>
-                        {formatStatus(item.status)}
-                      </span>
-                    </div>
+
+                    <span style={nameStyle}>{item.name}</span>
                   </div>
 
-                  <span style={scoreStyle}>
-                    {getPriorityLabel(item.value)}
-                  </span>
+                  <div style={rightGroupStyle}>
+                    <span style={statusStyle}>
+                      {formatStatus(item.status)}
+                    </span>
+
+                    
+                  </div>
+
+                 
                 </HoverRow>
               </button>
             );
@@ -232,6 +234,21 @@ const scoreStyle: CSSProperties = {
   fontSize: "13px",
   fontWeight: 700,
   color: "#0f172a",
+};
+
+const rightGroupStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "12px",
+  minWidth: "120px", // 🔥 KEY: keeps alignment consistent
+  justifyContent: "flex-end",
+};
+
+const statusStyle: CSSProperties = {
+  fontSize: "12px",
+  color: "#64748b",
+  minWidth: "80px", // 🔥 KEY: same width for all statuses
+  textAlign: "right",
 };
 
 export default SideInfoCard;

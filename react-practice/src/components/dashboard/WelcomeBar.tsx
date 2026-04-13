@@ -19,7 +19,6 @@ function WelcomeBar({ screenWidth }: WelcomeBarProps) {
       <div style={breadcrumbStyle}>Welcome / Dashboard</div>
 
       <div style={actionsStyle}>
-        <button style={smallButtonStyle}>◻◻</button>
         <button style={smallButtonStyle}>‹</button>
         <button style={smallButtonStyle}>›</button>
       </div>

@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { Menu, LayoutGrid, Settings, Bell, Search, User } from "lucide-react";
+import { LayoutGrid, Settings, Bell, Search, User } from "lucide-react";
 import IconButton from "../ui/IconButton";
 import Card from "../ui/Card";
 
@@ -10,41 +10,49 @@ type TopbarProps = {
 function Topbar({ screenWidth }: TopbarProps) {
   const isMobile = screenWidth < 768;
 
-  return (
-    <Card
-      style={{
-        ...topbarStyle,
-        flexDirection: isMobile ? "column" : "row",
-        alignItems: isMobile ? "stretch" : "center",
-        minHeight: isMobile ? "auto" : "68px",
-        gap: isMobile ? "14px" : "16px",
-        padding: isMobile ? "16px" : "14px 20px",
-      }}
-    >
-      <div
-        style={{
-          ...leftGroupStyle,
-          flexWrap: "wrap",
-          width: isMobile ? "100%" : "auto",
-          flex: isMobile ? "none" : 1,
-          minWidth: 0,
-        }}
-      >
-        <IconButton>
-          <Menu size={18} />
-        </IconButton>
+  if (isMobile) {
+    return (
+      <Card style={mobileTopbarStyle}>
+        <div style={mobileTopRowStyle}>
+          <div style={mobileTopbarLabelStyle}>Dashboard</div>
 
+          <div style={mobileActionsStyle}>
+            <IconButton>
+              <User size={18} />
+            </IconButton>
+
+            <IconButton>
+              <Settings size={18} />
+            </IconButton>
+
+            <IconButton>
+              <Bell size={18} />
+            </IconButton>
+          </div>
+        </div>
+
+        <div style={mobileSearchRowStyle}>
+          <div style={mobileSearchWrapperStyle}>
+            <Search size={16} color="#94a3b8" />
+            <input
+              type="text"
+              placeholder="Search dashboard..."
+              style={searchInputStyle}
+            />
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card style={desktopTopbarStyle}>
+      <div style={leftGroupStyle}>
         <IconButton>
           <LayoutGrid size={18} />
         </IconButton>
 
-        <div
-          style={{
-            ...searchWrapperStyle,
-            width: isMobile ? "100%" : "300px",
-            maxWidth: "100%",
-          }}
-        >
+        <div style={searchWrapperStyle}>
           <Search size={16} color="#94a3b8" />
           <input
             type="text"
@@ -54,13 +62,15 @@ function Topbar({ screenWidth }: TopbarProps) {
         </div>
       </div>
 
-      <div
-        style={{
-          ...topbarRightSideStyle,
-          width: isMobile ? "100%" : "auto",
-          justifyContent: isMobile ? "space-between" : "flex-end",
-        }}
-      >
+      <div style={topbarRightSideStyle}>
+        <div style={brandMiniStyle}>
+          <div style={brandMiniLogoStyle}>X</div>
+
+          <div style={brandMiniTextWrapStyle}>
+            <div style={brandMiniTitleStyle}>X Support AI</div>
+          </div>
+        </div>
+
         <div style={rightGroupStyle}>
           <div style={avatarStyle}>
             <User size={16} />
@@ -74,35 +84,67 @@ function Topbar({ screenWidth }: TopbarProps) {
             <Bell size={18} />
           </IconButton>
         </div>
-
-        <div style={brandMiniStyle}>
-          <div style={brandMiniLogoStyle}>FM</div>
-
-          <div style={brandMiniTextWrapStyle}>
-            <div style={brandMiniTitleStyle}>FM Support AI</div>
-            <div style={brandMiniSubtitleStyle}>Factory Intelligence</div>
-          </div>
-        </div>
       </div>
     </Card>
   );
 }
 
-const topbarStyle: CSSProperties = {
+const desktopTopbarStyle: CSSProperties = {
   display: "flex",
+  alignItems: "center",
   justifyContent: "space-between",
+  minHeight: "68px",
+  gap: "16px",
+  padding: "14px 20px",
+};
+
+const mobileTopbarStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+  padding: "14px",
+};
+
+const mobileTopRowStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "12px",
+};
+
+const mobileTopbarLabelStyle: CSSProperties = {
+  fontSize: "16px",
+  fontWeight: 700,
+  color: "#0f172a",
+  letterSpacing: "-0.01em",
+  margin: 0,
+  flex: 1,
+  textAlign: "left",
+};
+
+const mobileActionsStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
+  flexShrink: 0,
+};
+
+const mobileSearchRowStyle: CSSProperties = {
+  width: "100%",
 };
 
 const leftGroupStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: "12px",
+  flex: 1,
+  minWidth: 0,
 };
 
 const topbarRightSideStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: "14px",
+  gap: "16px",
   flexShrink: 0,
 };
 
@@ -130,25 +172,50 @@ const brandMiniLogoStyle: CSSProperties = {
   color: "#fff",
   fontWeight: 700,
   fontSize: "14px",
+  flexShrink: 0,
 };
 
 const brandMiniTextWrapStyle: CSSProperties = {
   minWidth: 0,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  lineHeight: 1.1,
 };
 
 const brandMiniTitleStyle: CSSProperties = {
   fontWeight: 700,
   fontSize: "14px",
+  color: "#0f172a",
   whiteSpace: "nowrap",
+  margin: 0,
+  lineHeight: 1.1,
 };
 
 const brandMiniSubtitleStyle: CSSProperties = {
   fontSize: "11px",
   color: "#94a3b8",
   whiteSpace: "nowrap",
+  marginTop: "2px",
+  lineHeight: 1.2,
 };
 
 const searchWrapperStyle: CSSProperties = {
+  width: "300px",
+  maxWidth: "100%",
+  height: "42px",
+  borderRadius: "999px",
+  border: "1px solid #e2e8f0",
+  backgroundColor: "#f8fafc",
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
+  padding: "0 14px",
+  boxSizing: "border-box",
+};
+
+const mobileSearchWrapperStyle: CSSProperties = {
+  width: "100%",
   height: "42px",
   borderRadius: "999px",
   border: "1px solid #e2e8f0",
