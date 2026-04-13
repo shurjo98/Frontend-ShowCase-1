@@ -477,11 +477,7 @@ const brandTitleStyle: CSSProperties = {
   letterSpacing: "1px",
 };
 
-const brandSubStyle: CSSProperties = {
-  margin: "2px 0 0 0",
-  fontSize: "12px",
-  color: "#94a3b8",
-};
+
 
 const sectionStyle: CSSProperties = {
   marginBottom: "22px",

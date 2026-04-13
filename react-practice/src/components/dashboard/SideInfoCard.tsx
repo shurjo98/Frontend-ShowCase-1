@@ -10,7 +10,6 @@ type SortMode = "ai_score" | "name";
 type QueueItem = {
   name: string;
   value: number;
-  trend: "up" | "down";
   status: QueueStatus;
 };
 
@@ -26,7 +25,6 @@ function SideInfoCard() {
     return sideListItems.map((item, index) => ({
       name: item.name,
       value: Number(item.value),
-      trend: item.trend === "up" ? ("up" as const) : ("down" as const),
       status: statuses[index % statuses.length],
     }));
   }, []);
@@ -69,10 +67,7 @@ function SideInfoCard() {
                 key={item.name}
                 type="button"
                 onClick={() => setSelectedIndex(index)}
-                style={{
-                  ...buttonWrapperStyle,
-                  ...(isSelected ? selectedButtonStyle : {}),
-                }}
+                style={buttonWrapperStyle}
               >
                 <HoverRow
                   style={{
@@ -92,14 +87,8 @@ function SideInfoCard() {
                   </div>
 
                   <div style={rightGroupStyle}>
-                    <span style={statusStyle}>
-                      {formatStatus(item.status)}
-                    </span>
-
-                    
+                    <span style={statusStyle}>{formatStatus(item.status)}</span>
                   </div>
-
-                 
                 </HoverRow>
               </button>
             );
@@ -117,19 +106,11 @@ function formatStatus(status: QueueStatus) {
   return "Open";
 }
 
-function getPriorityLabel(value: number) {
-  if (value >= 80) return "High";
-  if (value >= 45) return "Medium";
-  return "Low";
-}
-
 function getPriorityColor(value: number) {
   if (value >= 80) return "#ef4444";
   if (value >= 45) return "#f59e0b";
   return "#22c55e";
 }
-
-// ============ STYLES ============
 
 const cardStyle: CSSProperties = {
   minHeight: "420px",
@@ -193,16 +174,12 @@ const selectedRowStyle: CSSProperties = {
   boxShadow: "inset 3px 0 0 #2563eb",
 };
 
-const selectedButtonStyle: CSSProperties = {
-  all: "unset",
-  display: "contents",
-};
-
 const leftStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: "12px",
   minWidth: 0,
+  flex: 1,
 };
 
 const dotStyle: CSSProperties = {
@@ -212,42 +189,28 @@ const dotStyle: CSSProperties = {
   flexShrink: 0,
 };
 
-const textBlockStyle: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "4px",
-  minWidth: 0,
-};
-
 const nameStyle: CSSProperties = {
   fontSize: "14px",
   fontWeight: 700,
   color: "#0f172a",
-};
-
-const metaStyle: CSSProperties = {
-  fontSize: "12px",
-  color: "#64748b",
-};
-
-const scoreStyle: CSSProperties = {
-  fontSize: "13px",
-  fontWeight: 700,
-  color: "#0f172a",
+  minWidth: 0,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
 };
 
 const rightGroupStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: "12px",
-  minWidth: "120px", // 🔥 KEY: keeps alignment consistent
   justifyContent: "flex-end",
+  minWidth: "110px",
+  flexShrink: 0,
 };
 
 const statusStyle: CSSProperties = {
   fontSize: "12px",
   color: "#64748b",
-  minWidth: "80px", // 🔥 KEY: same width for all statuses
+  minWidth: "80px",
   textAlign: "right",
 };
 

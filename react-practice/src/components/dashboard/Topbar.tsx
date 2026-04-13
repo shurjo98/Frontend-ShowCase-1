@@ -192,13 +192,7 @@ const brandMiniTitleStyle: CSSProperties = {
   lineHeight: 1.1,
 };
 
-const brandMiniSubtitleStyle: CSSProperties = {
-  fontSize: "11px",
-  color: "#94a3b8",
-  whiteSpace: "nowrap",
-  marginTop: "2px",
-  lineHeight: 1.2,
-};
+
 
 const searchWrapperStyle: CSSProperties = {
   width: "300px",
